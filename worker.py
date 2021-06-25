@@ -11,6 +11,7 @@ from datetime import datetime
 from cryptography.fernet import Fernet
 
 TMP_FOLDER_PATH = '/tmp1'
+TMP_FOLDER_PATH_2 = '/tmp2'
 UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -106,7 +107,17 @@ def upload_file(file_name):
 
 while True:
     if path.exists(TMP_FOLDER_PATH):
-        print('[{}]: Checking folder path'.format(datetime.now()))
+        print('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
+        for file in os.listdir(TMP_FOLDER_PATH):
+            time.sleep(5)
+            if file.endswith('.plot'):
+                print('[{}]: Found file "{}"'.format(datetime.now(), file))
+                upload_thread = threading.Thread(target=upload_file, args=[file])
+                upload_thread.start()
+                print('[{}]: Uploading process started for file "{}"'.format(datetime.now(), file))
+    time.sleep(5)
+    if path.exists(TMP_FOLDER_PATH_2):
+        print('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH_2))
         for file in os.listdir(TMP_FOLDER_PATH):
             time.sleep(5)
             if file.endswith('.plot'):
