@@ -119,7 +119,7 @@ while True:
     time.sleep(5)
     if path.exists(TMP_FOLDER_PATH_2):
         print('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH_2))
-        for file in os.listdir(TMP_FOLDER_PATH):
+        for file in os.listdir(TMP_FOLDER_PATH_2):
             time.sleep(5)
             if file.endswith('.plot'):
                 print('[{}]: Found file "{}"'.format(datetime.now(), file))
