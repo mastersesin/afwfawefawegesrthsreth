@@ -8,11 +8,14 @@ from googleapiclient.discovery import build
 from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaFileUpload
 from datetime import datetime
+from cryptography.fernet import Fernet
 
 TMP_FOLDER_PATH = '/tmp3'
 UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
 SCOPES = ['https://www.googleapis.com/auth/drive']
+GLOBAL_KEY = b'tNE09TWU66coGQ-mmZwjPrHkPbyJ2cR5jnFzNBaK7b8='
+GLOBAL_ENCRYPTION_WORKER = Fernet(GLOBAL_KEY)
 
 
 def edit_json_token_file(file_name, json_obj):
@@ -42,8 +45,8 @@ def after_upload_success_delete_uploaded_file(file_name):
 def get_unused_credential():
     try:
         for file_name in os.listdir(UNUSED_CREDENTIAL_PATH):
-            json_file_obj = open(os.path.join(UNUSED_CREDENTIAL_PATH, file_name))
-            json_obj = json.load(json_file_obj)
+            encrypted_json_obj = open(os.path.join(UNUSED_CREDENTIAL_PATH, file_name)).read()
+            json_obj = json.loads(GLOBAL_ENCRYPTION_WORKER.decrypt(encrypted_json_obj.encode()).decode())
             if 'last_used_utc' in json_obj and 'used_times' in json_obj:
                 if json_obj['used_times'] >= 7 and json_obj['last_used_utc'] - int(time.time()) <= 86400:
                     continue
