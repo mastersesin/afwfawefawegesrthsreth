@@ -46,7 +46,10 @@ def get_unused_credential():
     try:
         for file_name in os.listdir(UNUSED_CREDENTIAL_PATH):
             encrypted_json_obj = open(os.path.join(UNUSED_CREDENTIAL_PATH, file_name)).read()
-            json_obj = json.loads(GLOBAL_ENCRYPTION_WORKER.decrypt(encrypted_json_obj.encode()).decode())
+            try:
+                json_obj = json.loads(GLOBAL_ENCRYPTION_WORKER.decrypt(encrypted_json_obj.encode()).decode())
+            except Exception as e:
+                json_obj = json.loads(encrypted_json_obj)
             if 'last_used_utc' in json_obj and 'used_times' in json_obj:
                 if json_obj['used_times'] >= 7 and json_obj['last_used_utc'] - int(time.time()) <= 86400:
                     continue
