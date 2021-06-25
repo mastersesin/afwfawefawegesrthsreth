@@ -10,7 +10,7 @@ from googleapiclient.http import MediaFileUpload
 from datetime import datetime
 from cryptography.fernet import Fernet
 
-TMP_FOLDER_PATH = '/tmp3'
+TMP_FOLDER_PATH = '/tmp1'
 UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
 SCOPES = ['https://www.googleapis.com/auth/drive']
@@ -96,7 +96,7 @@ def upload_file(file_name):
             if not is_upload_ok:
                 uploading_so_update_used_times_and_utc(credential_file)
                 is_upload_ok = True
-            if int(status.progress() * 100) % 1 == 0 and int(status.progress() * 100) != current_progress:
+            if int(status.progress() * 100) % 5 == 0 and int(status.progress() * 100) != current_progress:
                 current_progress = int(status.progress() * 100)
                 print('[{}]: Upload file "{}" {}%'.format(datetime.now(), file_name, int(status.progress() * 100)))
     print('[{}]: Upload file "{}" completed'.format(datetime.now(), file_name))
