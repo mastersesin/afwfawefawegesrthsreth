@@ -83,7 +83,8 @@ def init_google_drive_credential():
 def upload_file(file_name):
     google_drive, credential_file = init_google_drive_credential()
     move_file_to_uploading(file_name)
-    plot_file_obj = MediaFileUpload(os.path.join(UPLOADING_PATH, file_name), chunksize=1024 * 1024, resumable=True)
+    plot_file_obj = MediaFileUpload(os.path.join(UPLOADING_PATH, file_name), chunksize=100 * 1024 * 1024,
+                                    resumable=True)
     file_metadata = {
         'name': file_name
     }
