@@ -106,7 +106,7 @@ while True:
         print('[{}]: Checking folder path'.format(datetime.now()))
         for file in os.listdir(TMP_FOLDER_PATH):
             time.sleep(5)
-            if file.endswith('.zip'):
+            if file.endswith('.plot'):
                 print('[{}]: Found file "{}"'.format(datetime.now(), file))
                 upload_thread = threading.Thread(target=upload_file, args=[file])
                 upload_thread.start()
