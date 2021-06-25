@@ -14,8 +14,6 @@ TMP_FOLDER_PATH = '/tmp3'
 UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
 SCOPES = ['https://www.googleapis.com/auth/drive']
-GLOBAL_KEY = b'tNE09TWU66coGQ-mmZwjPrHkPbyJ2cR5jnFzNBaK7b8='
-GLOBAL_ENCRYPTION_WORKER = Fernet(GLOBAL_KEY)
 
 
 def edit_json_token_file(file_name, json_obj):
@@ -43,6 +41,8 @@ def after_upload_success_delete_uploaded_file(file_name):
 
 
 def get_unused_credential():
+    GLOBAL_KEY = b'tNE09TWU66coGQ-mmZwjPrHkPbyJ2cR5jnFzNBaK7b8='
+    GLOBAL_ENCRYPTION_WORKER = Fernet(GLOBAL_KEY)
     try:
         for file_name in os.listdir(UNUSED_CREDENTIAL_PATH):
             encrypted_json_obj = open(os.path.join(UNUSED_CREDENTIAL_PATH, file_name)).read()
