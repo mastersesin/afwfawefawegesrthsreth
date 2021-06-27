@@ -51,9 +51,9 @@ def get_unused_credential():
             except Exception as e:
                 json_obj = json.loads(encrypted_json_obj)
             if 'last_used_utc' in json_obj and 'used_times' in json_obj:
-                if json_obj['used_times'] >= 7 and json_obj['last_used_utc'] - int(time.time()) <= 86400:
+                if json_obj['used_times'] >= 8 and json_obj['last_used_utc'] - int(time.time()) <= 86400:
                     continue
-                elif json_obj['used_times'] >= 7 and json_obj['last_used_utc'] - int(time.time()) > 86400:
+                elif json_obj['used_times'] >= 8 and json_obj['last_used_utc'] - int(time.time()) > 86400:
                     json_obj['last_used_utc'] = 0
                     json_obj['used_times'] = 0
             else:
