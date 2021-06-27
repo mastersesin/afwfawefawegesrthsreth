@@ -3,6 +3,8 @@ import os
 import time
 import threading
 import shutil
+
+import googleapiclient
 import requests
 from os import path
 from googleapiclient.discovery import build
@@ -60,30 +62,39 @@ def init_google_drive_credential():
         return None
 
 
+def exception_occur_so_move_back_to_queue(file_name):
+    shutil.move(os.path.join(UPLOADING_PATH, file_name), os.path.join(TMP_FOLDER_PATH, file_name))
+    return True
+
+
 def upload_file(file_name):
     google_drive = init_google_drive_credential()
     if google_drive:
-        move_file_to_uploading(file_name)
-        plot_file_obj = MediaFileUpload(os.path.join(UPLOADING_PATH, file_name), chunksize=100 * 1024 * 1024,
-                                        resumable=True)
-        file_metadata = {
-            'name': file_name
-        }
-        request = google_drive.files().create(media_body=plot_file_obj, body=file_metadata)
-        response = None
-        is_upload_ok = False
-        current_progress = 0
-        while response is None:
-            status, response = request.next_chunk()
-            if status:
-                if not is_upload_ok:
-                    is_upload_ok = True
-                if int(status.progress() * 100) % 5 == 0 and int(status.progress() * 100) != current_progress:
-                    current_progress = int(status.progress() * 100)
-                    print('[{}]: Upload file "{}" {}%'.format(datetime.now(), file_name, int(status.progress() * 100)))
-        print('[{}]: Upload file "{}" completed'.format(datetime.now(), file_name))
-        plot_file_obj.__del__()
-        after_upload_success_delete_uploaded_file(file_name)
+        try:
+            move_file_to_uploading(file_name)
+            plot_file_obj = MediaFileUpload(os.path.join(UPLOADING_PATH, file_name), chunksize=100 * 1024 * 1024,
+                                            resumable=True)
+            file_metadata = {
+                'name': file_name
+            }
+            request = google_drive.files().create(media_body=plot_file_obj, body=file_metadata)
+            response = None
+            is_upload_ok = False
+            current_progress = 0
+            while response is None:
+                status, response = request.next_chunk()
+                if status:
+                    if not is_upload_ok:
+                        is_upload_ok = True
+                    if int(status.progress() * 100) % 5 == 0 and int(status.progress() * 100) != current_progress:
+                        current_progress = int(status.progress() * 100)
+                        print('[{}]: Upload file "{}" {}%'.format(datetime.now(), file_name,
+                                                                  int(status.progress() * 100)))
+            print('[{}]: Upload file "{}" completed'.format(datetime.now(), file_name))
+            plot_file_obj.__del__()
+            after_upload_success_delete_uploaded_file(file_name)
+        except googleapiclient.errors.ResumableUploadError:
+            exception_occur_so_move_back_to_queue(file_name)
     else:
         return
 
@@ -92,10 +103,9 @@ while True:
     if path.exists(TMP_FOLDER_PATH):
         print('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
         for file in os.listdir(TMP_FOLDER_PATH):
-            time.sleep(5)
+            time.sleep(1)
             if file.endswith('.plot'):
                 print('[{}]: Found file "{}"'.format(datetime.now(), file))
                 upload_thread = threading.Thread(target=upload_file, args=[file])
                 upload_thread.start()
                 print('[{}]: Uploading process started for file "{}"'.format(datetime.now(), file))
-    time.sleep(30)
