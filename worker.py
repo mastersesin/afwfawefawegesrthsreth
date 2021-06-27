@@ -100,6 +100,7 @@ def upload_file(file_name):
 
 
 while True:
+    time.sleep(1)
     if path.exists(TMP_FOLDER_PATH):
         print('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
         for file in os.listdir(TMP_FOLDER_PATH):
