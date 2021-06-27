@@ -14,7 +14,7 @@ TMP_FOLDER_PATH = '/tmp1'
 UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
 SCOPES = ['https://www.googleapis.com/auth/drive']
-CREDENTIAL_URL = 'http://127.0.0.1:5000/credential'
+CREDENTIAL_URL = 'http://35.226.69.158:16524/credential'
 
 
 def edit_json_token_file(file_name, json_obj):
@@ -42,7 +42,7 @@ def after_upload_success_delete_uploaded_file(file_name):
 
 
 def get_unused_credential():
-    json_response_obj = requests.get('http://127.0.0.1:5000/credential')
+    json_response_obj = requests.get(CREDENTIAL_URL)
     if json_response_obj.status_code == 200:
         json_credential = json_response_obj.json().get('message').get('json_credential')
         return json_credential
