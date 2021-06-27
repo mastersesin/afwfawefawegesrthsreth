@@ -63,6 +63,7 @@ def init_google_drive_credential():
 
 
 def exception_occur_so_move_back_to_queue(file_name):
+    print('Exception occur so move "{}" back from {} to {}'.format(file_name, UPLOADING_PATH, TMP_FOLDER_PATH))
     shutil.move(os.path.join(UPLOADING_PATH, file_name), os.path.join(TMP_FOLDER_PATH, file_name))
     return True
 
