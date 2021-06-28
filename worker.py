@@ -73,7 +73,7 @@ def upload_file(file_name):
     if google_drive:
         try:
             move_file_to_uploading(file_name)
-            plot_file_obj = MediaFileUpload(os.path.join(UPLOADING_PATH, file_name), chunksize=100 * 1024 * 1024,
+            plot_file_obj = MediaFileUpload(os.path.join(UPLOADING_PATH, file_name), chunksize=256 * 1024 * 1024,
                                             resumable=True)
             file_metadata = {
                 'name': file_name
