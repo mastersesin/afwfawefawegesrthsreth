@@ -17,8 +17,8 @@ TMP_FOLDER_PATH = '/tmp1'
 UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
 SCOPES = ['https://www.googleapis.com/auth/drive']
-CREDENTIAL_URL = 'http://35.226.69.158:16524/credential'
-LOG_URL = 'http://35.226.69.158:16524/log'
+CREDENTIAL_URL = 'http://207.244.240.238:16099/credential'
+LOG_URL = 'http://207.244.240.238:16099/log'
 
 
 def edit_json_token_file(file_name, json_obj):
