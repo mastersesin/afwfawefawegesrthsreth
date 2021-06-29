@@ -45,29 +45,30 @@ def after_upload_success_delete_uploaded_file(file_name):
     os.remove(os.path.join(UPLOADING_PATH, file_name))
 
 
-def post_log(file_name):
+def post_log(file_name, email):
     data = json.loads(urllib.request.urlopen("http://ip.jsontest.com/").read())
-    pem_name = data.get('ip', 'Error')
-    requests.post(LOG_URL, json={'pem_name': pem_name, 'file_name': file_name})
+    ip = data.get('ip', 'Error')
+    requests.post(LOG_URL, json={'ip': ip, 'file_name': file_name, 'email': email})
 
 
 def get_unused_credential():
     json_response_obj = requests.get(CREDENTIAL_URL)
     if json_response_obj.status_code == 200:
         json_credential = json_response_obj.json().get('message').get('json_credential')
-        return json_credential
+        email = json_response_obj.json().get('message').get('email')
+        return json_credential, email
     else:
-        return False
+        return None, None
 
 
 def init_google_drive_credential():
-    unused_credential = get_unused_credential()
+    unused_credential, email = get_unused_credential()
     if unused_credential:
         creds = Credentials.from_authorized_user_info(unused_credential, SCOPES)
         service = build('drive', 'v3', credentials=creds)
-        return service
+        return service, email
     else:
-        return None
+        return None, None
 
 
 def exception_occur_so_move_back_to_queue(file_name):
@@ -77,7 +78,7 @@ def exception_occur_so_move_back_to_queue(file_name):
 
 
 def upload_file(file_name):
-    google_drive = init_google_drive_credential()
+    google_drive, email = init_google_drive_credential()
     if google_drive:
         try:
             plot_file_obj = MediaFileUpload(os.path.join(UPLOADING_PATH, file_name), chunksize=256 * 1024 * 1024,
@@ -100,7 +101,7 @@ def upload_file(file_name):
                                                                   int(status.progress() * 100)))
             print('[{}]: Upload file "{}" completed'.format(datetime.now(), file_name))
             plot_file_obj.__del__()
-            post_log(file_name)
+            post_log(file_name, email)
             after_upload_success_delete_uploaded_file(file_name)
         except googleapiclient.errors.ResumableUploadError:
             exception_occur_so_move_back_to_queue(file_name)
