@@ -80,7 +80,6 @@ def upload_file(file_name):
     google_drive = init_google_drive_credential()
     if google_drive:
         try:
-            move_file_to_uploading(file_name)
             plot_file_obj = MediaFileUpload(os.path.join(UPLOADING_PATH, file_name), chunksize=256 * 1024 * 1024,
                                             resumable=True)
             file_metadata = {
@@ -105,8 +104,6 @@ def upload_file(file_name):
             after_upload_success_delete_uploaded_file(file_name)
         except googleapiclient.errors.ResumableUploadError:
             exception_occur_so_move_back_to_queue(file_name)
-        except:
-            exception_occur_so_move_back_to_queue(file_name)
     else:
         return
 
@@ -118,6 +115,7 @@ while True:
         for file in os.listdir(TMP_FOLDER_PATH):
             time.sleep(1)
             if file.endswith('.plot'):
+                move_file_to_uploading(file)
                 print('[{}]: Found file "{}"'.format(datetime.now(), file))
                 upload_thread = threading.Thread(target=upload_file, args=[file])
                 upload_thread.start()
