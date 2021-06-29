@@ -3,6 +3,7 @@ import os
 import time
 import threading
 import shutil
+import urllib.request
 
 import googleapiclient
 import requests
@@ -45,7 +46,8 @@ def after_upload_success_delete_uploaded_file(file_name):
 
 
 def post_log(file_name):
-    pem_name = os.environ['PEM_NAME']
+    data = json.loads(urllib.request.urlopen("http://ip.jsontest.com/").read())
+    pem_name = data.get('ip', 'Error')
     requests.post(LOG_URL, json={'pem_name': pem_name, 'file_name': file_name})
 
 
