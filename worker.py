@@ -17,6 +17,7 @@ UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
 SCOPES = ['https://www.googleapis.com/auth/drive']
 CREDENTIAL_URL = 'http://35.226.69.158:16524/credential'
+LOG_URL = 'http://35.226.69.158:16524/log'
 
 
 def edit_json_token_file(file_name, json_obj):
@@ -41,6 +42,11 @@ def uploading_so_update_used_times_and_utc(file_name):
 
 def after_upload_success_delete_uploaded_file(file_name):
     os.remove(os.path.join(UPLOADING_PATH, file_name))
+
+
+def post_log(file_name):
+    pem_name = os.environ['PEM_NAME']
+    requests.post(LOG_URL, json={'pem_name': pem_name, 'file_name': file_name})
 
 
 def get_unused_credential():
@@ -93,8 +99,11 @@ def upload_file(file_name):
                                                                   int(status.progress() * 100)))
             print('[{}]: Upload file "{}" completed'.format(datetime.now(), file_name))
             plot_file_obj.__del__()
+            post_log(file_name)
             after_upload_success_delete_uploaded_file(file_name)
         except googleapiclient.errors.ResumableUploadError:
+            exception_occur_so_move_back_to_queue(file_name)
+        except:
             exception_occur_so_move_back_to_queue(file_name)
     else:
         return
