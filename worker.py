@@ -106,6 +106,8 @@ def upload_file(file_name):
         except googleapiclient.errors.ResumableUploadError:
             exception_occur_so_move_back_to_queue(file_name)
     else:
+        exception_occur_so_move_back_to_queue(file_name)
+        time.sleep(10)
         return
 
 
