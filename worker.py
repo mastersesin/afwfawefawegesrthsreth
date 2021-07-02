@@ -4,6 +4,7 @@ import time
 import threading
 import shutil
 import urllib.request
+import logging
 
 import googleapiclient
 import requests
@@ -13,6 +14,11 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.http import MediaFileUpload
 from datetime import datetime
 
+logging.basicConfig(filename='log.txt',
+                    filemode='a',
+                    format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                    datefmt='%H:%M:%S',
+                    level=logging.DEBUG)
 TMP_FOLDER_PATH = '/tmp1'
 CURRENT_PATH = os.getcwd()
 UNUSED_CREDENTIAL_PATH = 'unused'
@@ -57,8 +63,10 @@ def init_google_drive_credential():
         return None, None
 
 
-def exception_occur_so_move_back_to_queue(file_name):
-    print('Exception occur so move "{}" back from {} to {}'.format(file_name, UPLOADING_PATH, TMP_FOLDER_PATH))
+def exception_occur_so_move_back_to_queue(file_name, reason):
+    logging.error(
+        'Exception occur so move "{}" back from {} to {} \n {}'.format(file_name, UPLOADING_PATH, TMP_FOLDER_PATH,
+                                                                       reason))
     shutil.move(os.path.join(CURRENT_PATH, UPLOADING_PATH, file_name), os.path.join(TMP_FOLDER_PATH, file_name))
     return True
 
@@ -90,10 +98,13 @@ def upload_file(file_name):
             plot_file_obj.__del__()
             post_log(file_name, email)
             after_upload_success_delete_uploaded_file(file_name)
-        except googleapiclient.errors.ResumableUploadError:
-            exception_occur_so_move_back_to_queue(file_name)
+        except googleapiclient.errors.ResumableUploadError as e:
+            exception_occur_so_move_back_to_queue(file_name, e)
+        except Exception as e:
+            print(e)
+            exception_occur_so_move_back_to_queue(file_name, e)
     else:
-        exception_occur_so_move_back_to_queue(file_name)
+        exception_occur_so_move_back_to_queue(file_name, 'dont know')
         time.sleep(10)
         return
 
