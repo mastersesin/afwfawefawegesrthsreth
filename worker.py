@@ -117,8 +117,13 @@ def check():
 
 
 check()
+count = 0
 while True:
     time.sleep(1)
+    count += 1
+    if count == 300:
+        count = 0
+        check()
     if path.exists(TMP_FOLDER_PATH):
         print('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
         for file in os.listdir(TMP_FOLDER_PATH):
