@@ -18,8 +18,7 @@ ExecStart=/tmp1/afwfawefawegesrthsreth/venv/bin/python3 worker.py
 WantedBy=multi-user.target
 """
 SCRIPT_CONTENT = """
-sudo pkill python3
-sudo pkill chia_plot
+sudo pkill -9 chia_plot
 rm -rf run.sh
 sudo apt-get update
 sudo mkfs -t xfs /dev/nvme2n1
@@ -40,13 +39,14 @@ mkdir uploading
 git checkout new
 sudo apt-get install -y python3-pip
 sudo pip3 install virtualenv
+chmod 777 chia_plot
 virtualenv venv
 venv/bin/pip install -r requirements.txt
 """
 
 SCRIPT_CHECK = """
 pidof python3 &
-pidof chia_plot 
+pidof chia_plot &
 ifstat -i ens3 1s 1 | awk 'NR==3 {print $2}'
 """
 PEM_PATH = 'pem'
