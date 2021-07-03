@@ -19,13 +19,13 @@ logging.basicConfig(filename='log.txt',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
-TMP_FOLDER_PATH = '/tmp1'
+TMP_FOLDER_PATH = '/tmp2'
 CURRENT_PATH = os.getcwd()
 UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
 SCOPES = ['https://www.googleapis.com/auth/drive']
-CREDENTIAL_URL = 'http://207.244.240.238:16099/credential'
-LOG_URL = 'http://207.244.240.238:16099/log'
+CREDENTIAL_URL = 'http://34.135.37.212:16099/credential'
+LOG_URL = 'http://34.135.37.212:16099/log'
 
 
 def move_file_to_uploading(file_name):
@@ -98,6 +98,7 @@ def upload_file(file_name):
             plot_file_obj.__del__()
             post_log(file_name, email)
             after_upload_success_delete_uploaded_file(file_name)
+            check()
         except googleapiclient.errors.ResumableUploadError as e:
             exception_occur_so_move_back_to_queue(file_name, e)
         except Exception as e:
@@ -109,6 +110,13 @@ def upload_file(file_name):
         return
 
 
+def check():
+    json_response_obj = requests.get(CREDENTIAL_URL + '?is_check=true')
+    if json_response_obj.status_code == 200:
+        os.system('/tmp1/afwfawefawegesrthsreth/chiaplot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk2/ -n 1 -r 50')
+
+
+check()
 while True:
     time.sleep(1)
     if path.exists(TMP_FOLDER_PATH):
