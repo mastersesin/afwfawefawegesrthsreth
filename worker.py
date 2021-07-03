@@ -1,5 +1,6 @@
 import json
 import os
+import subprocess
 import time
 import threading
 import shutil
@@ -113,7 +114,13 @@ def upload_file(file_name):
 def check():
     json_response_obj = requests.get(CREDENTIAL_URL + '?is_check=true')
     if json_response_obj.status_code == 200:
-        os.system('/tmp2/afwfawefawegesrthsreth/chiaplot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk2/ -n 1 -r 50')
+        try:
+            subprocess.check_output(['pidof', 'chiaplot'])
+        except subprocess.CalledProcessError:
+            return
+        subprocess.Popen(
+            ['/tmp2/afwfawefawegesrthsreth/chiaplot', '-t', '/tmp2/tmp2/', '-d', '/tmp2/', '-2', '/mnt/ramdisk2/', '-n',
+             '1', '-r', '50'])
 
 
 os.system('pkill -9 chiaplot')
