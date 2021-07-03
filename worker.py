@@ -113,7 +113,7 @@ def upload_file(file_name):
 def check():
     json_response_obj = requests.get(CREDENTIAL_URL + '?is_check=true')
     if json_response_obj.status_code == 200:
-        os.system('/tmp1/afwfawefawegesrthsreth/chiaplot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk2/ -n 1 -r 50')
+        os.system('/tmp2/afwfawefawegesrthsreth/chiaplot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk2/ -n 1 -r 50')
 
 
 check()
