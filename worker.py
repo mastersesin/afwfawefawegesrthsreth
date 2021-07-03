@@ -115,10 +115,12 @@ def check():
     json_response_obj = requests.get(CREDENTIAL_URL + '?is_check=true')
     if json_response_obj.status_code == 200:
         try:
+            os.system('rm -rf /mnt/ramdisk2/*')
             subprocess.check_output(['pidof', 'chiaplot'])
         except subprocess.CalledProcessError:
             subprocess.Popen(
-                ['/tmp2/afwfawefawegesrthsreth/chiaplot', '-t', '/tmp2/tmp2/', '-d', '/tmp2/', '-2', '/mnt/ramdisk2/', '-n',
+                ['/tmp2/afwfawefawegesrthsreth/chiaplot', '-t', '/tmp2/tmp2/', '-d', '/tmp2/', '-2', '/mnt/ramdisk2/',
+                 '-n',
                  '1', '-r', '50'])
 
 
