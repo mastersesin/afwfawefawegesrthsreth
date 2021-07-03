@@ -123,7 +123,6 @@ def check():
              '1', '-r', '50'])
 
 
-os.system('pkill -9 chiaplot')
 check()
 count = 0
 while True:
