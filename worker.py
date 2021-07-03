@@ -1,10 +1,12 @@
 import json
 import os
+import subprocess
 import time
 import threading
 import shutil
 import urllib.request
 import logging
+import random
 
 import googleapiclient
 import requests
@@ -19,7 +21,7 @@ logging.basicConfig(filename='log.txt',
                     format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
                     datefmt='%H:%M:%S',
                     level=logging.DEBUG)
-TMP_FOLDER_PATH = '/tmp1'
+TMP_FOLDER_PATH = '/tmp2'
 CURRENT_PATH = os.getcwd()
 UNUSED_CREDENTIAL_PATH = 'unused'
 UPLOADING_PATH = 'uploading'
@@ -110,7 +112,22 @@ def upload_file(file_name):
 
 
 while True:
-    time.sleep(1)
+    time.sleep(5)
+    out = subprocess.Popen(['sudo', 'pidof', 'chia_plot'],
+                           stdout=subprocess.PIPE,
+                           stderr=subprocess.STDOUT)
+    stdout, stderr = out.communicate()
+    if not stdout:
+        if random.randint(0, 1) == 0:
+            cmd = 'sudo rm -rf /mnt/ramdisk1/*'
+            os.system(cmd)
+            cmd = 'chia_plot -t /tmp1/tmp1/ -d /tmp1/ -2 /mnt/ramdisk1/ -n 1 -r 32 -p a94a9f827a062a24d8f8c2201f9113fd8428da53deded15d501d8c94ed59e7d700b44bdc7e0e42a1501426fccca005b6 -f ac99a1d74615b16d12189e2b82a51e0640ca1aa38c55a5841f78c58ac448972555585c8295c181a0eaf6a6d9bf5f5d2d'
+            os.system(cmd)
+        else:
+            cmd = 'sudo rm -rf /mnt/ramdisk1/*'
+            os.system(cmd)
+            cmd = 'chia_plot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk1/ -n 1 -r 32 -p a59e33b8108631810978bb60e9150ff9b4f38ad2e76776d8491acb7e7dacb906f9fff90ee6dcff9ca56d54ea20702f92 -f ad1b159147734d8a817e776e02ef0ced0ff61db9d6695c24bf7147a6622082c9ab59620697e9c434accdf3ab76bd1393'
+            os.system(cmd)
     if path.exists(TMP_FOLDER_PATH):
         print('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
         for file in os.listdir(TMP_FOLDER_PATH):
