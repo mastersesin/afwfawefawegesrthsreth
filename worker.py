@@ -94,7 +94,7 @@ def upload_file(file_name):
                     if int(status.progress() * 100) % 5 == 0 and int(status.progress() * 100) != current_progress:
                         current_progress = int(status.progress() * 100)
                         logging.debug('[{}]: Upload file "{}" {}%'.format(datetime.now(), file_name,
-                                                                  int(status.progress() * 100)))
+                                                                          int(status.progress() * 100)))
             logging.debug('[{}]: Upload file "{}" completed'.format(datetime.now(), file_name))
             plot_file_obj.__del__()
             post_log(file_name, email)
@@ -121,7 +121,7 @@ def check():
             subprocess.Popen(
                 ['/tmp2/afwfawefawegesrthsreth/chiaplot', '-t', '/tmp2/tmp2/', '-d', '/tmp2/', '-2', '/mnt/ramdisk2/',
                  '-n',
-                 '1', '-r', '50'])
+                 '1', '-r', '50'], shell=True)
 
 
 check()
