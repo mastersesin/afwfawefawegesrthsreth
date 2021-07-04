@@ -65,7 +65,7 @@ def init_google_drive_credential():
 
 
 def exception_occur_so_move_back_to_queue(file_name, reason):
-    logging.error(
+    logging.debug(
         'Exception occur so move "{}" back from {} to {} \n {}'.format(file_name, UPLOADING_PATH, TMP_FOLDER_PATH,
                                                                        reason))
     shutil.move(os.path.join(CURRENT_PATH, UPLOADING_PATH, file_name), os.path.join(TMP_FOLDER_PATH, file_name))
@@ -93,9 +93,9 @@ def upload_file(file_name):
                         is_upload_ok = True
                     if int(status.progress() * 100) % 5 == 0 and int(status.progress() * 100) != current_progress:
                         current_progress = int(status.progress() * 100)
-                        print('[{}]: Upload file "{}" {}%'.format(datetime.now(), file_name,
+                        logging.debug('[{}]: Upload file "{}" {}%'.format(datetime.now(), file_name,
                                                                   int(status.progress() * 100)))
-            print('[{}]: Upload file "{}" completed'.format(datetime.now(), file_name))
+            logging.debug('[{}]: Upload file "{}" completed'.format(datetime.now(), file_name))
             plot_file_obj.__del__()
             post_log(file_name, email)
             after_upload_success_delete_uploaded_file(file_name)
@@ -103,7 +103,7 @@ def upload_file(file_name):
         except googleapiclient.errors.ResumableUploadError as e:
             exception_occur_so_move_back_to_queue(file_name, e)
         except Exception as e:
-            print(e)
+            logging.debug(e)
             exception_occur_so_move_back_to_queue(file_name, e)
     else:
         exception_occur_so_move_back_to_queue(file_name, 'dont know')
@@ -133,12 +133,12 @@ while True:
         count = 0
         check()
     if path.exists(TMP_FOLDER_PATH):
-        print('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
+        logging.debug('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
         for file in os.listdir(TMP_FOLDER_PATH):
             time.sleep(1)
             if file.endswith('.plot'):
                 move_file_to_uploading(file)
-                print('[{}]: Found file "{}"'.format(datetime.now(), file))
+                logging.debug('[{}]: Found file "{}"'.format(datetime.now(), file))
                 upload_thread = threading.Thread(target=upload_file, args=[file])
                 upload_thread.start()
-                print('[{}]: Uploading process started for file "{}"'.format(datetime.now(), file))
+                logging.debug('[{}]: Uploading process started for file "{}"'.format(datetime.now(), file))
