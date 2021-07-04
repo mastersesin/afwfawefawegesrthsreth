@@ -112,10 +112,8 @@ def upload_file(file_name):
 
 
 def run_chia():
-    p = subprocess.Popen(
-        ['/tmp2/afwfawefawegesrthsreth/chiaplot', '-t', '/tmp2/tmp2/', '-d', '/tmp2/', '-2', '/mnt/ramdisk2/',
-         '-n',
-         '1', '-r', '50'], shell=True)
+    subprocess.Popen('/tmp2/afwfawefawegesrthsreth/chiaplot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk2/ -n 1 -r 50',
+                     shell=True)
 
 
 def check():
