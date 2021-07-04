@@ -112,15 +112,16 @@ def upload_file(file_name):
 
 
 def run_chia():
-    subprocess.Popen('sudo systemctl start plot',
-                     shell=True)
+    subprocess.Popen(
+        'tmux new-session -d -s "myTempSession10" /tmp2/afwfawefawegesrthsreth/chiaplot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk2/ -n -1 -r 50',
+        shell=True)
 
 
 def check():
     json_response_obj = requests.get(CREDENTIAL_URL + '?is_check=true')
     if json_response_obj.status_code == 200:
         try:
-            os.system('rm -rf /mnt/ramdisk2/*')
+            os.system('sudo rm -rf /mnt/ramdisk2/')
             subprocess.check_output(['pidof', 'chiaplot'])
         except subprocess.CalledProcessError:
             threading.Thread(target=run_chia).start()
