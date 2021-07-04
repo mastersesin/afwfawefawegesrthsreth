@@ -135,8 +135,9 @@ while True:
     if count == 300:
         count = 0
         check()
+        logging.debug('Service run normally')
     if path.exists(TMP_FOLDER_PATH):
-        logging.debug('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
+        # logging.debug('[{}]: Checking folder path {}'.format(datetime.now(), TMP_FOLDER_PATH))
         for file in os.listdir(TMP_FOLDER_PATH):
             time.sleep(1)
             if file.endswith('.plot'):
