@@ -120,7 +120,7 @@ def check():
     json_response_obj = requests.get(CREDENTIAL_URL + '?is_check=true')
     if json_response_obj.status_code == 200:
         try:
-            os.system('rm -rf /mnt/ramdisk2/*')
+            os.system('sudo rm -rf /mnt/ramdisk2/*')
             subprocess.check_output(['pidof', 'chiaplot'])
         except subprocess.CalledProcessError:
             threading.Thread(target=run_chia).start()
