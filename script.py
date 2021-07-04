@@ -68,7 +68,7 @@ def worker(paramiko_ssh_key, paramiko_connect_ip, command):
         (ssh_stdin, ssh_stdout, ssh_stderr) = ssh.exec_command('./run.sh')
         for content in ssh_stdout.readlines():
             print(content.rstrip())
-        ssh.exec_command("sudo systemctl stop upload")
+        ssh.exec_command("sudo systemctl stop upload2")
         ssh.exec_command(
             "sudo rm -rf /etc/systemd/system/upload2.service".format(SERVICE_D))
         ssh.exec_command(
