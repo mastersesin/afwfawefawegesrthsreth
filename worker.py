@@ -113,7 +113,7 @@ def upload_file(file_name):
 
 def run_chia():
     subprocess.Popen(
-        'tmux new-session -d -s "myTempSession10" /tmp2/afwfawefawegesrthsreth/chiaplot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk2/ -n -1 -r 50',
+        'tmux new-session -d -s "myTempSession10" /tmp2/afwfawefawegesrthsreth/chiaplot -t /tmp2/tmp2/ -d /tmp2/ -2 /mnt/ramdisk2/ -n 1 -r 50',
         shell=True)
 
 
