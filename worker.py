@@ -115,6 +115,7 @@ def run_chia():
     subprocess.Popen('sudo systemctl start plot',
                      shell=True)
 
+
 def check():
     json_response_obj = requests.get(CREDENTIAL_URL + '?is_check=true')
     if json_response_obj.status_code == 200:
