@@ -111,6 +111,18 @@ def upload_file(file_name):
         return
 
 
+def run_chia():
+    p = subprocess.Popen(
+        ['/tmp2/afwfawefawegesrthsreth/chiaplot', '-t', '/tmp2/tmp2/', '-d', '/tmp2/', '-2', '/mnt/ramdisk2/',
+         '-n',
+         '1', '-r', '50'], shell=True, stdout=subprocess.PIPE)
+    stdout, stderr = p.communicate()
+    if stdout:
+        logging.debug(stdout)
+    if stderr:
+        logging.debug(stderr)
+
+
 def check():
     json_response_obj = requests.get(CREDENTIAL_URL + '?is_check=true')
     if json_response_obj.status_code == 200:
@@ -118,10 +130,7 @@ def check():
             os.system('rm -rf /mnt/ramdisk2/*')
             subprocess.check_output(['pidof', 'chiaplot'])
         except subprocess.CalledProcessError:
-            subprocess.Popen(
-                ['/tmp2/afwfawefawegesrthsreth/chiaplot', '-t', '/tmp2/tmp2/', '-d', '/tmp2/', '-2', '/mnt/ramdisk2/',
-                 '-n',
-                 '1', '-r', '50'], shell=True)
+            threading.Thread(target=run_chia).start()
 
 
 check()
